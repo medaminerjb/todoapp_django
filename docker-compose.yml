@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: 'todo'
+      
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes' 
+    volumes:
+      - my-datavolume:/var/lib/mysql
+
+  web:
+    image: todo_web:latest
+    environment:
+      - DB_ADDRESS="db"
+    command: python manage.py runserver 0.0.0.0:8000 
+    restart: always
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+volumes:
+  my-datavolume:

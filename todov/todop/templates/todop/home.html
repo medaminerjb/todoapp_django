@@ -1,0 +1,170 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/1362334b71.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Franklin:wght@200&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>{% translate Document%}</title>
+  </head>
+
+  <body>
+    
+    
+  
+    </ul>
+    
+    <div class="container">
+      <br>
+      <form action="{% url 'set_language' %}" method="post" class="language-switcher">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ redirect_to }}">
+        <select name="language">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ language.name_local }} ({{ language.code }})
+                </option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Go">
+    </form>
+      <ul class="list-group todos mx-auto text-light delete">
+        {% for i in todos %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <span>{{i.todo_name}}</span>
+          {% if i.status == True %}
+          <span>{% trans "Completed" %}</span>
+        {% else %}
+          <span>{% trans "In progress" %}</span>
+        {% endif %}
+          <a href="{% url 'delete' i.todo_name %}"><button type="submit" class="btn btn-danger">{% trans "Delete" %}</button></a>
+          <a href="{% url 'update' i.todo_name %}"><button type="submit" class="btn btn-success ms-1">{% trans "Finished" %}</button></a>
+        {% endfor %}
+      </ul>
+
+      <form class="add text-center my-4" method="post">
+        <label class="text-light">{% trans "Add a new todo..." %}</label>
+        {% csrf_token %}
+        <input class="form-control m-auto" type="text" name="task" />
+        <br />
+        <div class="text-center">
+          <input type="submit" class="btn btn-light" name="add" value="{% trans 'submit' %}" />
+        </div>
+      </form>
+    </div>
+    <br><br>
+    <div class="text-center">
+     <a href="{% url 'logout' %}"> <input type="submit" class="btn btn2-light" style="width: 180px; color: #fff; background-color: #cf1717;" value="{% trans 'logout' %}"/>
+     </a>
+    </div>
+  </body>
+  <style>
+    body {
+  background: #352f5b;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 23px;
+}
+
+.container {
+  max-width: 400px;
+}
+
+input[type="text"],
+input[type="text"]:focus {
+  color: #fff;
+  border: none;
+  background: rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+.todos li {
+  background: #423a6f;
+  color: #fff;
+}
+
+.delete {
+  cursor: pointer;
+}
+
+.filtered {
+  display: none !important;
+}
+
+.btn:hover {
+  background: #423a6f;
+  color: #fff;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 13px 13px;
+  transition: 0.8s;
+}
+.btn2:hover {
+  background: #b40c0c;
+  color: #fff;
+  border-top-width: 2px;
+  border-bottom-width: 1px;
+  border-radius: 26px 26px;
+  transition: 0.8s;
+}
+.language-switcher {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.language-switcher select {
+    padding: 5px;
+    font-size: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+}
+
+.language-switcher select option {
+    background-color: #fff;
+    color: black;
+}
+
+.language-switcher input[type="submit"] {
+    padding: 10px 25px;
+    font-size: inherit;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 26px 26px;
+    cursor: pointer;
+}
+
+.language-switcher input[type="submit"]:hover {
+    background-color: #0056b3;
+    border-top-width: 2px;
+  border-bottom-width: 1px;
+  border-radius: 26px 26px;
+  transition: 0.8s;
+}
+
+  </style>
+</html>
