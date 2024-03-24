@@ -8,4 +8,4 @@ in dockerfile.yaml path execute this command
 docker-compose up
 
 ```
-i
+
